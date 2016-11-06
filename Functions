@@ -1,0 +1,29 @@
+#Calculate gender 
+gender<-function(id){
+  parts<-strsplit(id,split="-")[[1]]
+  secondpart<-parts[2]
+  number<-substr(secondpart,1,3)
+  int<-as(number,"integer")
+  if(int%%2==0){
+    return("F")
+  }else{
+    return("M")
+  }
+}
+
+#calculate age by days
+age<-function(id){ 
+  parts<-strsplit(id,split="-")[[1]]
+  firstpart<-parts[1]
+  numerona<-as(firstpart,"integer")
+  today<-Sys.Date()
+  shortyear<-as(substr(firstpart,5,6),"integer")
+  if(substr(id,7,7)=="-"){
+    longyear<-1900+shortyear
+  }else{
+    longyear<-2000+shortyear
+  }
+  bage<-as.Date(paste0(substr(firstpart,1,2),".",substr(firstpart,3,4),".",longyear),format="%d.%m.%Y")
+  agedays<-difftime(today,bage,units = "days")
+  return(as(agedays,"double"))                  
+}

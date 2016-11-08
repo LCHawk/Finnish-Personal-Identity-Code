@@ -27,3 +27,50 @@ age<-function(id){
   agedays<-difftime(today,bage,units = "days")
   return(as(agedays,"double"))                  
 }
+
+#check that ID is valid.
+checkID<-function(id){
+  if(nchar(id)!=11){
+    return(FALSE)
+  }
+  t<-substring(id,7,7)
+  if(sum(t!=c("+","A","-"))!=2){#Check that there is right mark in right place.
+        return(FALSE)
+  }
+  firstpart<-strsplit(id,"-")[[1]][1]
+  secondpart<-strsplit(id,"-")[[1]][2]
+  if(is.na(as.double(firstpart))){
+    return(FALSE)
+  }
+  if(is.na(as.double(substr(secondpart,1,3)))){
+    return(FALSE)
+  }
+  shortyear<-as(substr(firstpart,5,6),"integer")
+  if(substr(id,7,7)=="-"){
+    longyear<-1900+shortyear
+  }else{
+    longyear<-2000+shortyear
+  }
+  bage<-tryCatch({as.Date(paste0(substr(firstpart,1,2),".",substr(firstpart,3,4),".",longyear),format="%d.%m.%Y")},error={FALSE})
+  #Check that last number is valid 
+  if(bage==FALSE){
+    return(FALSE)
+  }
+  if(as.double(substr(secondpart,1,3))<2||as.double(substr(secondpart,1,3))>899){
+    return(FALSE)
+  }
+  #tee vielä tarkastusnumeron laskenta
+  code<-as.double(paste0(firstpart,substr(secondpart,1,3)))
+  mark<-code%%31
+  lastdigit<-substr(secondpart,4,4)
+  if(mark<10&&mark==lastdigit){
+    return(TRUE)
+  }
+  comdigit<-c(1,2,3,4,5,6,7,8,9,"A","B","C","D","E","F","H","J","K","L","M","N","P","R","S","T","U","V","W","X","Y")
+  lastdigit<-toupper(lastdigit)
+  if(lastdigit==comdigit[mark]){
+    return(TRUE)
+  }else{
+    return(FALSE)
+  }
+}

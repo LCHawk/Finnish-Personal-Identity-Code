@@ -1,6 +1,9 @@
 #Calculate gender 
 gender<-function(id){
   parts<-strsplit(id,split="-")[[1]]
+  if(nchar(parts[1])>10){
+    parts<-strsplit(id,split="A")[[1]]
+  }
   secondpart<-parts[2]
   number<-substr(secondpart,1,3)
   int<-as(number,"integer")
@@ -14,6 +17,9 @@ gender<-function(id){
 #calculate age by days
 age<-function(id){ 
   parts<-strsplit(id,split="-")[[1]]
+  if(nchar(parts[1])>10){
+    parts<-strsplit(id,split="A")[[1]]
+  }
   firstpart<-parts[1]
   numerona<-as(firstpart,"integer")
   today<-Sys.Date()
@@ -35,10 +41,20 @@ checkID<-function(id){
   }
   t<-substring(id,7,7)
   if(sum(t!=c("+","A","-"))!=2){#Check that there is right mark in right place.
-        return(FALSE)
+    return(FALSE)
   }
-  firstpart<-strsplit(id,"-")[[1]][1]
-  secondpart<-strsplit(id,"-")[[1]][2]
+  parts<-strsplit(id,"-")[[1]]
+  if(nchar(parts[1])>10){
+    parts<-strsplit(id,"A")[[1]]
+  }
+  if(nchar(parts[1])>10){
+    parts<-strsplit(id,"+")[[1]]
+  }
+  firstpart<-parts[1]
+  secondpart<-parts[2]
+  if(nchar(secondpart)<4){
+    secondpart<-paste0(secondpart,"A")
+  }
   if(is.na(as.double(firstpart))){
     return(FALSE)
   }

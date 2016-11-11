@@ -4,6 +4,9 @@ gender<-function(id){
   if(nchar(parts[1])>10){
     parts<-strsplit(id,split="A")[[1]]
   }
+  if(nchar(parts[1])>10){
+    parts<-strsplit(id,split="+")[[1]]
+  }
   secondpart<-parts[2]
   number<-substr(secondpart,1,3)
   int<-as(number,"integer")
